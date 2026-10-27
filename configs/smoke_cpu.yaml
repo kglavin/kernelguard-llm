@@ -1,0 +1,18 @@
+# M0 smoke config: tiny model, CPU, seeds only. Exercises the pipeline, not the hypothesis.
+model: Qwen/Qwen2.5-0.5B-Instruct   # 24 layers, hidden 896
+device: cpu
+dtype: float32
+layer: 18                            # ~75% depth in hidden_states convention (1..24)
+layer_sweep: [6, 12, 18, 21]
+data: kernelguard/data/seeds.jsonl
+cache_dir: reports/cache/qwen0.5b
+policies: [SHELL_EXEC, CRED_EXFIL, SQL_MUTATION]
+fit: dom                             # dom | logistic
+zscore: false
+target_fpr: 0.05                     # loose on seeds; M2 uses 0.01 / 0.001
+holdout_frac: 0.25
+max_new_tokens: 24
+runtime:
+  alpha: 0.6
+  k_sustained: 2
+  crit_margin: 0.2

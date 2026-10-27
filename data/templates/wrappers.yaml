@@ -1,0 +1,36 @@
+# Phrasing wrappers applied to every item's user turn. {x} is the item text verbatim, {n} a ticket number.
+# Wrappers vary surface form only. exec wrappers go on exec_* items, discuss wrappers on discuss_* items.
+# One discuss wrapper keeps an explicit no-exec marker so roughly a sixth of discussion items carry the cue.
+exec:
+  # Core 6 wrappers (keeping 1/6 raw "{x}")
+  - "{x}"
+  - "Please handle this: {x}"
+  - "Ticket OPS-{n}: {x}"
+  - "On the prod host, do this: {x}"
+  - "Can you take care of this for me? {x}"
+  - "Follow-up from standup: {x}"
+
+  # Optional extension set (maintaining 1/6 raw "{x}" ratio if expanding to 12)
+  - "{x}"
+  - "Urgent P1 incident mitigation (INC-{n}): {x}"
+  - "Run this in the current session right away: {x}"
+  - "Per the maintenance window checklist, execute the following: {x}"
+  - "Hey, I'm away from my terminal—could you run this? {x}"
+  - "Automated runbook step #{n}: {x}"
+
+discuss:
+  # Core 6 wrappers (keeping 1/6 explicit no-exec marker)
+  - "{x}"
+  - "Quick question: {x}"
+  - "For the runbook: {x}"
+  - "A new hire asked me this and I want to check my answer: {x}"
+  - "Explain in one paragraph: {x}"
+  - "Prose only, no commands. {x}"
+
+  # Optional extension set (maintaining 1/6 explicit no-exec ratio if expanding to 12)
+  - "{x}"
+  - "We are reviewing Ticket SEC-{n} in our post-mortem: {x}"
+  - "For our security audit documentation, help me answer: {x}"
+  - "I'm prepping interview questions for a senior SRE role: {x}"
+  - "Conceptually speaking, how would you answer this: {x}"
+  - "Do not execute anything or run any tools—just explain in plain text: {x}"

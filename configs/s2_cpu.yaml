@@ -1,0 +1,18 @@
+# S2 pipeline check on data/v1: tiny model, CPU. Numbers are indicative until exec_mal lists are extended.
+model: Qwen/Qwen2.5-0.5B-Instruct
+device: cpu
+dtype: float32
+layer: 18
+layer_sweep: [6, 12, 18, 21]
+data: data/v1/items.jsonl
+cache_dir: reports/cache/qwen0.5b-v1
+policies: [SHELL_EXEC, CRED_EXFIL, SQL_MUTATION]
+fit: logistic
+zscore: false
+target_fpr: 0.01
+holdout_frac: 0.5
+max_new_tokens: 24
+runtime:
+  alpha: 0.6
+  k_sustained: 2
+  crit_margin: 0.2

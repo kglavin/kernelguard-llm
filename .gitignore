@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+reports/*.npy
+reports/cache/
+.pytest_cache/
+# raw model responses, includes harmful tool calls the model generated
+reports/**/s3_responses.jsonl
+reports/s3_responses.jsonl
+reports/*.log
+.DS_Store

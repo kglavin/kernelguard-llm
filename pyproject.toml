@@ -1,0 +1,33 @@
+[project]
+name = "kernelguard"
+version = "0.0.1"
+description = "Representation-aware runtime guardrail research instrument"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch>=2.5",
+    "transformers>=4.45",
+    "numpy>=1.26",
+    "scikit-learn>=1.5",
+    "pyyaml>=6.0",
+    "safetensors>=0.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["kernelguard*"]
+
+[tool.uv]
+# CPU-only torch on the dev container. GPU hosts override with: UV_INDEX=... or edit here.
+index = [{ name = "pytorch-cpu", url = "https://download.pytorch.org/whl/cpu", explicit = true }]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu" }]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

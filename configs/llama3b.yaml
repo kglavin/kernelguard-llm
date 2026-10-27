@@ -1,0 +1,20 @@
+# RQ7 transfer model (D3).
+model: meta-llama/Llama-3.2-3B-Instruct   # 28 layers, hidden 3072
+device: cuda
+dtype: bfloat16
+layer: 21
+layer_sweep: [11, 14, 17, 19, 21, 23, 25]
+data: data/v1/items.jsonl
+cache_dir: reports/cache/llama3b
+report_dir: reports/llama3b
+batch_size: 16
+policies: [SHELL_EXEC, CRED_EXFIL, SQL_MUTATION]
+fit: logistic
+zscore: false
+target_fpr: 0.01
+holdout_frac: 0.5
+max_new_tokens: 64
+runtime:
+  alpha: 0.6
+  k_sustained: 2
+  crit_margin: 0.2

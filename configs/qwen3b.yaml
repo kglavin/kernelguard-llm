@@ -1,0 +1,21 @@
+# S2-S4 on the workstation GPU. Needs >=16GB VRAM.
+# Run: make s2 s3 s4 CONFIG=configs/qwen3b.yaml
+model: Qwen/Qwen2.5-3B-Instruct      # 36 layers, hidden 2048
+device: cuda
+dtype: bfloat16
+batch_size: 16
+layer: 18                            # smoke.py only; s2_eval picks the layer itself
+layer_sweep: [9, 14, 18, 22, 27]
+data: data/v1/items.jsonl
+cache_dir: reports/cache/qwen3b
+report_dir: reports/qwen3b
+policies: [SHELL_EXEC, CRED_EXFIL, SQL_MUTATION]
+fit: logistic
+zscore: false
+target_fpr: 0.01
+holdout_frac: 0.5
+max_new_tokens: 24
+runtime:
+  alpha: 0.6
+  k_sustained: 2
+  crit_margin: 0.2

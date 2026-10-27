@@ -10,3 +10,6 @@ reports/**/s3_responses.jsonl
 reports/s3_responses.jsonl
 reports/*.log
 .DS_Store
+# preflight outputs and downloaded external datasets
+reports/preflight*/
+data/external/

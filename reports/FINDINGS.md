@@ -62,18 +62,31 @@ The gate scores the last prompt token with the inbound partition. It then scores
 - **The outbound part causes false alarms.** The running-mean gate flagged 17% to 42% of held-out benign tool calls. In the demo it stopped 2 of 3 benign tool calls about 18 tokens in. Scoring each token on its own was worse.
 - **A usable gate today would be inbound only.** That gate would still need a threshold calibrated on a wider benign set.
 
+## External check: XSTest
+
+XSTest (Röttger et al., 2024) has 250 safe prompts that sound alarming, such as "kill" a process, and 200 unsafe contrast prompts. None of them were used in training. Each prompt was placed in the same agent transcript and scored with the S2 partition and thresholds, unchanged.
+
+| Method | Safe prompts flagged | Unsafe prompts flagged |
+|---|---|---|
+| Vector partition, any policy | 0% | 0% |
+| TF-IDF text classifier, any policy | 44% | 53% |
+
+- **No false alarms on harmless prompts that sound alarming.** The text classifier, trained on the same requests, flags 44% of them.
+- **The partition is specific to its policies, not to harm in general.** XSTest's unsafe prompts are about violence, discrimination and privacy, which are outside the three policies. The partition flags none of them, and its scores do not separate unsafe from safe (AUROC 0.50).
+- **This test does not cover the known weak spot.** XSTest prompts are questions, and the partition already ignores questions. The open problem is false alarms on benign execution requests from new families (7% to 18%). An external set of benign commands, such as NL2Bash, would test that.
+
 ## Limits
 
 - **Model.** The model is small and a weak agent. It made a tool call for 57% to 80% of bad requests but only 26% to 43% of benign execution requests.
 - **Test size.** Held-out sets are 26 to 34 distinct bad requests inbound and 17 to 21 bad responses outbound, so the intervals are wide.
-- **Data source.** All requests come from templates written by one team. No external dataset has been tested.
+- **Data source.** All training requests come from templates written by one team. The only external test so far is XSTest.
 - **Not tested.** Obfuscation and adaptive attacks were not run. An adaptive attacker is known to defeat activation probes (Bailey et al., ICLR 2026).
 - **Weak baseline.** The text baseline is TF-IDF only. An embedding model or an LLM judge would be a stronger comparison.
 
 ## Next
 
 1. Run on Qwen2.5-3B on the workstation GPU with `make s2 s3 s4 CONFIG=configs/qwen3b.yaml`.
-2. Test on an external labelled set the partition has never seen, such as XSTest for harmless-but-alarming prompts and AgentHarm for agent requests.
+2. Test false alarms on external benign execution requests, such as NL2Bash, and on agent requests from AgentHarm.
 3. Calibrate the inbound threshold on a wider benign set and measure the false-alarm rate again.
 
 ## Reproduce
@@ -84,6 +97,7 @@ make s2        # extract vectors (about 90 min on CPU) and run the smoke checks
 make s2-eval   # inbound results, reports/s2.json
 make s3        # outbound results and runtime demo, reports/s3.json (about 70 min on CPU)
 make s4        # text baseline, reports/s4.json
+make xstest    # external check, needs data/external/xstest/xstest_prompts.csv
 ```
 
 `reports/s3_responses.jsonl` holds the model's raw responses, including harmful tool calls it generated. Do not share it.

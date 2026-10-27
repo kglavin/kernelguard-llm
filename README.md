@@ -9,6 +9,16 @@ make smoke     # S0 end-to-end on the 50 seeds, Qwen2.5-0.5B on CPU
 make dataset   # build data/v1/items.jsonl from seeds and templates
 make s2 s2-eval s3 s4              # full run on the CPU config
 make s2 s3 s4 CONFIG=configs/qwen3b.yaml   # full run on a GPU
+make preflight                             # whole chain on a 72-item slice, about 10 min on CPU
+make preflight PREFLIGHT_CONFIG=configs/preflight_gpu.yaml   # same on the GPU with the 3B model
+make xstest CONFIG=...                     # external check, after s2-eval for that config
+```
+
+XSTest is not in the repo. Fetch it into its own folder before `make xstest`:
+
+```
+mkdir -p data/external/xstest
+curl -s -o data/external/xstest/xstest_prompts.csv https://raw.githubusercontent.com/paul-rottger/xstest/main/xstest_prompts.csv
 ```
 
 Results: [reports/FINDINGS.md](reports/FINDINGS.md).

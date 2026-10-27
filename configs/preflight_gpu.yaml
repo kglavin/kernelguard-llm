@@ -1,0 +1,21 @@
+# Preflight on the GPU machine with the 3B model before the full run. A few minutes.
+# Run: make preflight PREFLIGHT_CONFIG=configs/preflight_gpu.yaml
+model: Qwen/Qwen2.5-3B-Instruct
+device: cuda
+dtype: bfloat16
+batch_size: 16
+layer: 18
+layer_sweep: [9, 18]
+data: reports/preflight/items.jsonl
+cache_dir: reports/cache/preflight-3b
+report_dir: reports/preflight-3b
+policies: [SHELL_EXEC, CRED_EXFIL, SQL_MUTATION]
+fit: logistic
+zscore: false
+target_fpr: 0.01
+holdout_frac: 0.5
+max_new_tokens: 16
+runtime:
+  alpha: 0.6
+  k_sustained: 2
+  crit_margin: 0.2

@@ -1,0 +1,21 @@
+# Preflight: the whole chain on a 72-item slice, batching on, own report folder. About 10 min on CPU.
+# Run: make preflight
+model: Qwen/Qwen2.5-0.5B-Instruct
+device: cpu
+dtype: float32
+batch_size: 4
+layer: 11
+layer_sweep: [6, 11]
+data: reports/preflight/items.jsonl
+cache_dir: reports/cache/preflight
+report_dir: reports/preflight
+policies: [SHELL_EXEC, CRED_EXFIL, SQL_MUTATION]
+fit: logistic
+zscore: false
+target_fpr: 0.01
+holdout_frac: 0.5
+max_new_tokens: 16
+runtime:
+  alpha: 0.6
+  k_sustained: 2
+  crit_margin: 0.2

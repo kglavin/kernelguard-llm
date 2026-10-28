@@ -23,11 +23,11 @@ build-backend = "setuptools.build_meta"
 include = ["kernelguard*"]
 
 [tool.uv]
-# CPU-only torch on the dev container. GPU hosts override with: UV_INDEX=... or edit here.
-index = [{ name = "pytorch-cpu", url = "https://download.pytorch.org/whl/cpu", explicit = true }]
+# CUDA 12.6 torch for the GPU host (driver 570). The CPU dev container uses https://download.pytorch.org/whl/cpu.
+index = [{ name = "pytorch-cu126", url = "https://download.pytorch.org/whl/cu126", explicit = true }]
 
 [tool.uv.sources]
-torch = [{ index = "pytorch-cpu" }]
+torch = [{ index = "pytorch-cu126" }]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

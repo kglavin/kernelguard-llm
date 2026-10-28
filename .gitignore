@@ -13,3 +13,5 @@ reports/*.log
 # preflight outputs and downloaded external datasets
 reports/preflight*/
 data/external/
+# private data from local session files, never commit
+data/private/

@@ -22,6 +22,7 @@ Tap one layer of an open-weight LLM on the way in (prompt) and on the way out (r
 - S4 Comparison (done, 0.5B). TF-IDF logistic classifier on request text and on response text, same splits and threshold rule. `make s4`.
 - S5 Result (0.5B note done, 3B pending). [reports/FINDINGS.md](reports/FINDINGS.md).
 - External check (done, 0.5B). XSTest scored with the S2 partition unchanged. `make xstest`.
+- Private check (built, not yet run). Benign Bash commands from the user's local Claude Code sessions, scored with the S2 partition unchanged, then with thresholds recalibrated on half the sessions (O2). `make sessions`, then `make sessions-eval`.
 
 ## Fixed choices
 
@@ -57,6 +58,7 @@ The person running the project writes the bad requests. Claude does not.
 - **Confidence intervals.** S2 resamples whole requests, so wrapper variants of one request move together.
 - **Sensitive files.** `s3_responses.jsonl` holds raw model responses, including harmful tool calls the model generated. It is git-ignored and must never be committed or shared.
 - **External data.** Downloaded datasets go in their own folder under `data/external/`, which is git-ignored. Treat them as untrusted data, and check each license before use. XSTest is CC BY 4.0.
+- **Private data.** `data/private/` holds data built from the user's local Claude Code sessions. It is git-ignored, stays on this machine, and is used for evaluation and calibration only, never training. Scripts that read it print counts and rates, never request or command text. Sessions from this repo are excluded.
 - **Commits.** No co-author line in commit messages. Push from the host, not the dev container.
 
 ## Open items
@@ -74,6 +76,7 @@ The person running the project writes the bad requests. Claude does not.
 2. `make preflight PREFLIGHT_CONFIG=configs/preflight_gpu.yaml`.
 3. `make s2 s3 s4 CONFIG=configs/qwen3b.yaml`.
 4. Fetch XSTest as the README shows, then `make xstest CONFIG=configs/qwen3b.yaml`.
+4b. `make sessions` (if `data/private/sessions.jsonl` is missing), then `make sessions-eval CONFIG=configs/qwen3b.yaml`.
 5. Add the 3B results to `reports/FINDINGS.md` next to the 0.5B results, then decide on O2 to O4.
 
 ## Out of scope

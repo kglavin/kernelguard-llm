@@ -1,7 +1,8 @@
 CONFIG ?= configs/s2_cpu.yaml
 PREFLIGHT_CONFIG ?= configs/preflight_cpu.yaml
+LIMIT ?= 0
 
-.PHONY: setup seeds dataset merge test smoke s2 s2-eval s3 s4 preflight xstest clean
+.PHONY: setup seeds dataset merge test smoke s2 s2-eval s3 s4 preflight xstest sessions sessions-eval clean
 
 setup:
 	uv sync --extra dev --python 3.12
@@ -39,6 +40,13 @@ preflight: dataset
 
 xstest:
 	uv run python scripts/external_xstest.py $(CONFIG)
+
+# private, git-ignored data from local Claude Code sessions, evaluation and calibration only
+sessions:
+	uv run python -m kernelguard.data.import_sessions
+
+sessions-eval:
+	uv run python scripts/private_sessions.py $(CONFIG) --limit $(LIMIT)
 
 smoke: seeds
 	uv run python scripts/smoke.py configs/smoke_cpu.yaml
